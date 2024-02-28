@@ -1,5 +1,5 @@
-const loadPhone = async (searchFieldText) => {
-    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchFieldText}`);
+const loadPhone = async (searchText) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data;
     // console.log(phones)
@@ -8,13 +8,30 @@ const loadPhone = async (searchFieldText) => {
 
 const displayPhones = phones => {
     // console.log(phones);
+
     //Step-1. Select Container by Id-->
     const phoneContainer = document.getElementById("phone-container");
+
     // নতুন করে কিছু সার্চ দিলে আগের গুলো রিলোড/ফাকা হয়ে যাবে।---->
-phoneContainer.textContent=' ';
+    phoneContainer.textContent = ' ';
+
+    const showAllContainer = document.getElementById("show-all-button");
+
+    if (phones.length > 12) {
+        showAllContainer.classList.remove('hidden');
+    }
+    else {
+        showAllContainer.classList.add('hidden');
+    }
+
+
+    // ডিসপেলে তে ১৫ টার বেশি ফোন দেখাবে না 0  থেকে 15 এর আগ পর্যন্ত দেখাবে মোট ১৫টি। 
+    phones = phones.slice(0, 12);
+
+    // console.log(phones.length);
 
     phones.forEach(phones => {
-        console.log(phones);
+        // console.log(phones);
 
         //Step-2. creat a div-->
         const phoneCard = document.createElement('div');
@@ -47,11 +64,19 @@ phoneContainer.textContent=' ';
 
 //  handle search button
 
-const handleSearch= ()=>{
-   const searchField =document.getElementById("search-field");
-   const searchFieldText = searchField.value;
-   console.log(searchFieldText);
-   loadPhone(searchFieldText)
+const handleSearch = () => {
+    const searchField = document.getElementById("search-field");
+    const searchText = searchField.value;
+    // console.log(searchText);
+    loadPhone(searchText);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
+}
+
+
+const handleSearch2 = () => {
+    const searchField = document.getElementById("search-field2");
+    const searchText = searchField.value;
+    // console.log(searchText);
+    loadPhone(searchText);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
 }
 
 

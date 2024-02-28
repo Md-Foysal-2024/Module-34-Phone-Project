@@ -22,14 +22,25 @@
         <h2 class="text-4xl font-bold py-8">Phone Hunter API</h2>
 
         <section class="bg-gray-200 p-4 m-4">
-            <input id="search-field" type="text" placeholder="Search Here..." class="input input-bordered w-full max-w-xs" />
+            <input id="search-field" type="text" placeholder="Search Here..."
+                class="input input-bordered w-full max-w-xs" />
             <button onclick="handleSearch()" class="btn btn-accent">Search</button>
+
+            <input id="search-field2" type="text" class="input input-bordered w-full max-w-xs" placeholder="Search" />
+
+            <button onclick="handleSearch2()" class="btn btn-secondary">Secondary</button>
+
         </section>
 
 
         <section>
             <div id="phone-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
 
+            </div>
+
+            <div id="show-all-button" class="hidden">
+
+                <button class="btn btn-primary border-0 px-8 text-black bg-slate-300 mt-8">Show All</button>
             </div>
         </section>
     </main>
