@@ -1,12 +1,12 @@
-const loadPhone = async (searchText) => {
+const loadPhone = async (searchText, isShowAll) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data;
     // console.log(phones)
-    displayPhones(phones)
+    displayPhones(phones, isShowAll)
 }
 
-const displayPhones = phones => {
+const displayPhones = (phones, isShowAll) => {
     // console.log(phones);
 
     //Step-1. Select Container by Id-->
@@ -17,16 +17,20 @@ const displayPhones = phones => {
 
     const showAllContainer = document.getElementById("show-all-button");
 
-    if (phones.length > 12) {
+    if (phones.length > 12 && !isShowAll ) {
         showAllContainer.classList.remove('hidden');
     }
     else {
         showAllContainer.classList.add('hidden');
     }
+    
+    console.log("is Show All:", isShowAll)
 
+    // ডিসপেলে তে 12 টার বেশি ফোন দেখাবে না 0  থেকে 15 এর আগ পর্যন্ত দেখাবে মোট 12টি। 
+    if (!isShowAll) {
+        phones = phones.slice(0, 12);
 
-    // ডিসপেলে তে ১৫ টার বেশি ফোন দেখাবে না 0  থেকে 15 এর আগ পর্যন্ত দেখাবে মোট ১৫টি। 
-    phones = phones.slice(0, 12);
+    }
 
     // console.log(phones.length);
 
@@ -46,7 +50,7 @@ const displayPhones = phones => {
               <h2 class="card-title">${phones.phone_name}</h2>
               <p>If a dog chews shoes whose shoes does he choose?</p>
               <div class="card-actions justify-center">
-                <button class=" items-center  btn btn-primary">Buy Now</button>
+                <button onclick="handleShowDetail('${phones.slug}')" class=" items-center  btn btn-primary">SHOW DETAILS</button>
               </div>
             </div>
 
@@ -54,6 +58,7 @@ const displayPhones = phones => {
         //Step-5 AppendChild-->
         phoneContainer.appendChild(phoneCard);
     });
+    toggleLoadingSpinner(false)
 }
 
 
@@ -62,24 +67,62 @@ const displayPhones = phones => {
 
 
 
-//  handle search button
+//  handle search button 
 
-const handleSearch = () => {
+const handleSearch = (isShowAll) => {
+    toggleLoadingSpinner(true);         //-------->Loading arrow function call here
     const searchField = document.getElementById("search-field");
     const searchText = searchField.value;
     // console.log(searchText);
-    loadPhone(searchText);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
+    loadPhone(searchText, isShowAll);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
 }
 
 
-const handleSearch2 = () => {
-    const searchField = document.getElementById("search-field2");
-    const searchText = searchField.value;
-    // console.log(searchText);
-    loadPhone(searchText);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
+//  handle search button  recap-2---->
+
+// const handleSearch2 = () => {
+//     toggleLoadingSpinner(true);         //-------->Loading arrow function call here
+//     const searchField = document.getElementById("search-field2");
+//     const searchText = searchField.value;
+//     // console.log(searchText);
+//     loadPhone(searchText);   // fetch এর ফাংশন কে কল করা হয়েছে এখানে।
+// }
+
+
+
+// Set Loading Spinner 
+const toggleLoadingSpinner = (isLoading) => {
+    const loadingSpinner = document.getElementById('loading-spinner');
+
+    if (isLoading) {
+        loadingSpinner.classList.remove('hidden')
+    }
+    else {
+        loadingSpinner.classList.add('hidden')
+    }
+}
+
+
+//handle Show all
+
+const handleShowAll = () => {
+  handleSearch(true);
+
+}
+
+const handleShowDetail = async(id) => {
+ console.log('Show Detail', id)
+// load a single phone data------->
+const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
+const data = await res.json();
+console.log(data)
 }
 
 
 
 
-loadPhone()
+
+
+
+
+//loadPhone()
