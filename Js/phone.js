@@ -1,4 +1,4 @@
-const loadPhone = async (searchText, isShowAll) => {
+const loadPhone = async (searchText = '13', isShowAll) => {   //searchText='13'/'oppo'/'samsung'  এগুলো ডিফল্ট হয়ে থাকবে।
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data;
@@ -17,14 +17,14 @@ const displayPhones = (phones, isShowAll) => {
 
     const showAllContainer = document.getElementById("show-all-button");
 
-    if (phones.length > 12 && !isShowAll ) {
+    if (phones.length > 12 && !isShowAll) {
         showAllContainer.classList.remove('hidden');
     }
     else {
         showAllContainer.classList.add('hidden');
     }
-    
-    console.log("is Show All:", isShowAll)
+
+    // console.log("is Show All:", isShowAll)
 
     // ডিসপেলে তে 12 টার বেশি ফোন দেখাবে না 0  থেকে 15 এর আগ পর্যন্ত দেখাবে মোট 12টি। 
     if (!isShowAll) {
@@ -106,16 +106,45 @@ const toggleLoadingSpinner = (isLoading) => {
 //handle Show all
 
 const handleShowAll = () => {
-  handleSearch(true);
+    handleSearch(true);
 
 }
 
-const handleShowDetail = async(id) => {
- console.log('Show Detail', id)
-// load a single phone data------->
-const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
-const data = await res.json();
-console.log(data)
+const handleShowDetail = async (id) => {
+    // console.log('Show Detail', id)
+    // load a single phone data------->
+    const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
+    const data = await res.json();
+    // console.log(data);
+    const phone = data.data
+    showPhonesDetails(phone);
+}
+
+const showPhonesDetails = (phones) => {
+    console.log(phones);
+    const phoneName = document.getElementById("show-detail-phone-name");
+    phoneName.innerText = phones.name;
+
+    const showDetailContainer = document.getElementById("show-detail-container");
+    showDetailContainer.innerHTML = `
+    <img src="${phones.image}" alt="">
+    <p><span class="font-bold">Brand: </span>${phones.brand}</p>
+    <p><span class="font-bold">Name: </span>${phones.name}</p>
+    <p><span class="font-bold">Storage: </span>${phones.mainFeatures.storage}</p>
+    <p><span class="font-bold">Slug: </span>${phones.slug}</p>
+    <p><span></span></p>
+    <p><span></span></p>
+    <p><span></span></p>
+
+
+
+`
+
+
+    //Show/call the modal
+    show_details_modal.showModal()
+
+
 }
 
 
@@ -125,4 +154,4 @@ console.log(data)
 
 
 
-//loadPhone()
+loadPhone()
